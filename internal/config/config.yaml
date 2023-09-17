@@ -1,0 +1,6 @@
+server:
+  port: 3000
+  host: "localhost"
+
+database:
+  uri: "postgresql://root:pass@localhost:5432/test"
