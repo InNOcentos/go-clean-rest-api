@@ -1,22 +1,41 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type User struct  {
+  Name string
+  Age int32
+}
+
 
 func main() {
-	intCh := make(chan int)
+  reqUser := User{
+    Name: "test",
+    Age: 5,
+  }
 
-	go factorial(7, intCh)
+  s := make([]User, 0, 2)
+  s = append(s, reqUser, reqUser)
 
-	for num := range intCh {
-		fmt.Println(num)
-	}
+  fmt.Println(s)
+
+  j, err := json.Marshal(s)
+
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Println(string(j))
+
+  var users [2]User
+
+  err = json.Unmarshal(j,&users)
+
+  for _, user := range users {
+    fmt.Printf("Name: %s, Age: %d\n", user.Name, user.Age)
+  }
 }
 
-func factorial(n int, ch chan int) {
-	defer close(ch)
-	result := 1
-	for i := 1; i <= n; i++ {
-		result *= i
-		ch <- result
-	}
-}

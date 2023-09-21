@@ -8,11 +8,11 @@ import (
 )
 
 type Postgres struct {
-	pool *pgxpool.Pool
+	Pool *pgxpool.Pool
 }
 
 func (postgres *Postgres) Ping(ctx context.Context) error {
-	err := postgres.pool.Ping(ctx)
+	err := postgres.Pool.Ping(ctx)
 
 	if err != nil {
 		return fmt.Errorf("Error while ping: %w", err)
@@ -30,6 +30,6 @@ func NewClient(url string) (*Postgres, error) {
 	pool, err := pgxpool.NewWithConfig(context.Background(), poolConfig)
 
 	return &Postgres{
-		pool: pool,
+    Pool: pool,
 	}, nil
 }

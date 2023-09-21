@@ -9,6 +9,7 @@ import (
 
 type Handler interface {
 	Create(*gin.Context)
+	Get(*gin.Context)
 }
 
 type handler struct {
@@ -23,6 +24,7 @@ func NewHandler(uc user.UseCase) *handler {
 
 func (h *handler) Create(c *gin.Context) {
 	var payload user.CreateUserRequest
+  ctx := c.Request.Context()
 
 	err := c.ShouldBindJSON(&payload)
 	if err != nil {
@@ -30,8 +32,23 @@ func (h *handler) Create(c *gin.Context) {
 		return
 	}
 
-	user, err := h.useCase.CreateUser(payload)
+	user, err := h.useCase.CreateUser(ctx, payload)
 	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+func (h *handler) Get(c *gin.Context) {
+  ctx := c.Request.Context()
+
+  id := c.Param("id")
+
+	user, err := h.useCase.GetUser(ctx, id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 

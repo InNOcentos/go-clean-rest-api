@@ -11,5 +11,6 @@ func RegisterHTTPHandlers(router *gin.Engine, uc user.UseCase) {
 	users := router.Group("/users")
 	{
 		users.POST("", h.Create)
+    users.GET(":id", h.Get)
 	}
 }
